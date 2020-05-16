@@ -1,14 +1,22 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button,TextInput } from 'react-native';
 import { Formik } from 'formik';
+import { AuthContext } from '../Components/context'
 
 export default function LoginScreen({ navigation }) {
+
+    const {signIn} = React.useContext(AuthContext)
+    
+    const handleLogin = (values)=>{
+        //console.log(values.mobile_no)
+        signIn(values.mobile_no,values.password)
+    }
 
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Formik
                 initialValues={{ mobile_no: '' ,password:''}}
-                onSubmit={values => console.log(values)}
+                onSubmit={values => handleLogin(values)}
             >
                 {({ handleChange, handleBlur, handleSubmit, values }) => (
                     <View>
