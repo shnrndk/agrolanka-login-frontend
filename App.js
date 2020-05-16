@@ -1,19 +1,27 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './Screens/LoginScreen';
+import RegisterScreen from './Screens/RegisterScreen';
+import HomeScreen from './Screens/HomeScreen';
 
-export default function App() {
+
+const AuthStack = createStackNavigator();
+const HomeStack = createStackNavigator();
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+    <NavigationContainer>
+      <AuthStack.Navigator>
+        <AuthStack.Screen name="Login" component={LoginScreen} />
+        <AuthStack.Screen name="Register" component={RegisterScreen} />
+      </AuthStack.Navigator>
+      {/* <HomeStack.Navigator>
+        <AuthStack.Screen name="Home" component={HomeScreen} />
+      </HomeStack.Navigator> */}
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
