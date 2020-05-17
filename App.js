@@ -12,8 +12,6 @@ const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 
 function App() {
-  // const [isLoading, setIsLoading] = React.useState(true);
-  // const [userToken, setUserToken] = React.useState(null);
 
   const initialLoginState = {
     isLoading: true,
@@ -26,60 +24,86 @@ function App() {
       case 'RETRIEVE_TOKEN':
         return {
           ...prevState,
-          userToken:action.token,
-          isLoading:false
+          userToken: action.token,
+          isLoading: false
         };
       case 'LOGIN':
         return {
           ...prevState,
-          userName:action.id,
-          userToken:action.token,
-          isLoading:false
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false
         };
       case 'LOGOUT':
         return {
           ...prevState,
-          userName:null,
-          userToken:null,
-          isLoading:false
+          userName: null,
+          userToken: null,
+          isLoading: false
         };
       case 'REGISTER':
         return {
           ...prevState,
-          userName:action.id,
-          userToken:action.token,
-          isLoading:false
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false
         };
     }
   }
 
-  const [loginState,dispatch] =React.useReducer(loginReducer,initialLoginState)
+  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState)
 
   const authContext = React.useMemo(() => ({
-    signIn: async(mobile_no,password) => {
-      // setUserToken('fasd'),
-      //   setIsLoading(false)'
-      
+    signIn: async (mobile_no, password) => {
+
       let userToken;
       userToken = null;
-      if(mobile_no=='1234'||password=='pass'){
-        userToken='fsaf';
-        try{
-          await AsyncStorage.setItem('userToken', userToken)
-        }catch(e){
-          console.log(e)
+
+      const sendCred = (mobile_no, password) => new Promise((resolve, reject) => {
+
+        fetch('https://agrolanka-backend.herokuapp.com/driver/signin', {
+          method: 'POST',
+          body: JSON.stringify({
+            mobile_no: mobile_no,
+            password: password,
+          }),
+          headers: {
+            "Content-type": "application/json"
+          }
+        }).then((response) => response.json())
+          .then((json) => {
+            resolve(json);
+          }).catch((e) => {
+            reject(e)
+          })
+      })
+
+      async function storeToken() {
+        const tokenData = await sendCred(mobile_no, password);
+        console.log(tokenData)
+        console.log(tokenData.token)
+        if (tokenData.token != undefined) {
+          userToken = tokenData.token;
+          try {
+            await AsyncStorage.setItem('userToken', userToken)
+          } catch (e) {
+            console.log(e)
+          }
         }
+        console.log('user token:', userToken)
+        dispatch({ type: 'LOGIN', id: mobile_no, token: userToken })
       }
-      console.log('user token',userToken)
-      dispatch({type:'LOGIN',id:mobile_no,token:userToken})
+
+      storeToken();
+
     },
-    signOut: async() => {
-      try{
+    signOut: async () => {
+      try {
         await AsyncStorage.removeItem('userToken')
-      }catch(e){
+      } catch (e) {
         console.log(e)
       }
-      dispatch({type:'LOGOUT'})
+      dispatch({ type: 'LOGOUT' })
     },
     signUp: () => {
       setUserToken('fafds')
@@ -88,18 +112,18 @@ function App() {
   }))
 
   useEffect(() => {
-    setTimeout(async() => {
+    setTimeout(async () => {
       let userToken;
       userToken = null
-      try{
+      try {
         userToken = await AsyncStorage.getItem('userToken')
-      }catch(e){
+      } catch (e) {
         console.log(e)
       }
-     // console.log('user token:',userToken);
-      dispatch({type:'RETRIEVE_TOKEN',token:userToken})
+      // console.log('user token:',userToken);
+      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken })
     }, 1000)
-  }, [])  
+  }, [])
 
   if (loginState.isLoading) {
     return (
