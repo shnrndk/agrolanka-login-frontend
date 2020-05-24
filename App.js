@@ -105,9 +105,45 @@ function App() {
       }
       dispatch({ type: 'LOGOUT' })
     },
-    signUp: () => {
-      setUserToken('fafds')
-      setIsLoading(false)
+    signUp: async(values) => {
+      let userToken;
+      userToken = null;
+
+      const sendUserDetails = (values) => new Promise((resolve, reject) => {
+        console.log(values)
+        fetch('https://agrolanka-backend.herokuapp.com/driver/register', {
+          method: 'POST',
+          body: JSON.stringify({
+            ...values
+          }),
+          headers: {
+            "Content-type": "application/json"
+          }
+        }).then((response) => response.json())
+          .then((json) => {
+            resolve(json);
+          }).catch((e) => {
+            reject(e)
+          })
+      })
+
+      async function storeToken() {
+        const tokenData = await sendUserDetails(values);
+        console.log(tokenData)
+        console.log(tokenData.token)
+        if (tokenData.token != undefined) {
+          userToken = tokenData.token;
+          try {
+            await AsyncStorage.setItem('userToken', userToken)
+          } catch (e) {
+            console.log(e)
+          }
+        }
+        console.log('user token:', userToken)
+        dispatch({ type: 'LOGIN', id: values.mobile_no, token: userToken })
+      }
+
+      storeToken();
     }
   }))
 

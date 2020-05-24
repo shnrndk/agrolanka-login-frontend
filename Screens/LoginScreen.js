@@ -7,7 +7,7 @@ export default function LoginScreen({ navigation }) {
 
     const {signIn} = React.useContext(AuthContext)
     
-    const handleLogin = (values)=>{
+    const handleSubmit = (values)=>{
         //console.log(values.mobile_no)
         signIn(values.mobile_no,values.password)
     }
@@ -16,7 +16,7 @@ export default function LoginScreen({ navigation }) {
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Formik
                 initialValues={{ mobile_no: '' ,password:''}}
-                onSubmit={values => handleLogin(values)}
+                onSubmit={values => handleSubmit(values)}
             >
                 {({ handleChange, handleBlur, handleSubmit, values }) => (
                     <View>
