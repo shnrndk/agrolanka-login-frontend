@@ -7,6 +7,7 @@ import RegisterScreen from './Screens/RegisterScreen';
 import HomeScreen from './Screens/HomeScreen';
 import { AuthContext } from './Components/context';
 import { AsyncStorage } from 'react-native';
+import { Provider as PaperProvider } from 'react-native-paper';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -171,6 +172,7 @@ function App() {
 
   return (
     <AuthContext.Provider value={authContext}>
+      <PaperProvider>
       <NavigationContainer>
         {loginState.userToken != null ? (
           <HomeStack.Navigator>
@@ -185,6 +187,7 @@ function App() {
 
 
       </NavigationContainer>
+      </PaperProvider>
     </AuthContext.Provider>
   );
 }
