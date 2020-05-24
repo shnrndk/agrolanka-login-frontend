@@ -116,7 +116,7 @@ export default function RegisterScreen({ navigation }) {
               mode="outlined"
             />
             {/* <Button style={styles.btn} onPress={handleSubmit} title="Submit" /> */}
-            <Button  style={styles.btn} icon="camera" mode="contained" onPress={handleSubmit}>
+            <Button  style={styles.btn} icon="account-plus-outline" mode="contained" onPress={handleSubmit}>
               Sign Up
              </Button>
           </View>
