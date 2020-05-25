@@ -5,9 +5,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './Screens/LoginScreen';
 import RegisterScreen from './Screens/RegisterScreen';
 import HomeScreen from './Screens/HomeScreen';
+import AuthIntroScreen from './Screens/AuthIntroScreen';
 import { AuthContext } from './Components/context';
 import { AsyncStorage } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
+import {DefaultTheme,Provider as PaperProvider } from 'react-native-paper';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -172,14 +173,25 @@ function App() {
 
   return (
     <AuthContext.Provider value={authContext}>
-      <PaperProvider>
+      <PaperProvider theme={theme}>
       <NavigationContainer>
         {loginState.userToken != null ? (
-          <HomeStack.Navigator>
+          <HomeStack.Navigator screenOptions={{
+            headerStyle: {
+              backgroundColor: '#4747d1',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}>
             <HomeStack.Screen name="Home" component={HomeScreen} />
           </HomeStack.Navigator>
         ) :
-          <AuthStack.Navigator>
+          <AuthStack.Navigator screenOptions={{
+            headerShown: false
+          }}>
+            <AuthStack.Screen name="Intro" component={AuthIntroScreen} />
             <AuthStack.Screen name="Login" component={LoginScreen} />
             <AuthStack.Screen name="Register" component={RegisterScreen} />
           </AuthStack.Navigator>
@@ -191,5 +203,15 @@ function App() {
     </AuthContext.Provider>
   );
 }
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#4fc116',
+  },
+};
+
+
 
 export default App;
